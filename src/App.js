@@ -1,26 +1,103 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header'
+import List from './components/list/List'
 
 class App extends Component {
+  constructor (props){
+  super(props)
+  this.state={
+    task:'',
+    list:[],
+
+
+  }
+}
+
+
+
+
+updateTask=(e)=>{
+  // console.log(e.target.value);
+  this.setState({
+    task: e.target.value
+  })
+  if(e.key==='Enter'){
+    this.addTaskToList()
+  }
+// update.this.state.task
+}
+
+addTaskToList=()=>{
+  // add task to this.state.list
+  if (this.state.task){
+  let newList=this.state.list
+  
+  newList.push({
+    task: this.state.task,
+    completed: false,
+    likeCounter:0
+  })
+
+  this.setState({
+    task:'',
+    list:newList
+  })
+  }
+  
+}
+
+
+removeItemFromList=(index)=>{
+let newList=this.state.list
+
+newList.splice(index, 1)
+this.setState({
+  list:newList
+})
+}
+
+likeSubmitter=(index)=>{
+  let newList=this.state.list
+
+  newList[index].likeCounter++
+  this.setState({
+    list: newList
+  })
+
+}
+
+
+markTaskCompleted=(index)=>{
+  let newList=this.state.list
+
+  newList[index].completed=!newList[index].completed
+
+  this.setState({
+    list: newList
+  })
+}
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className="container">
+      
+        <Header
+          inputHandler={this.updateTask} 
+          taskValue={this.state.task}
+          clickHandler={this.addTaskToList}
+        />
+        <List
+          listItems={this.state.list}
+          removeItemFromList={this.removeItemFromList} 
+          markTaskCompleted={this.markTaskCompleted}
+          likeSubmitter={this.likeSubmitter}
+          />
+        
       </div>
+    //  <Title>Hello world!</Title> 
+    // //  size={'large'}
+    // //  color={'red'} etc..
+    // //  content={'Hello world'} />
     );
   }
 }
